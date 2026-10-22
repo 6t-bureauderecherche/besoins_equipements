@@ -53,9 +53,9 @@ TEXTES = {
     "bloc_2": ("Ajuster le ratio d'équipements", "le besoin brut est recalculé sur la même population future"),
     "bloc_3": ("Résultat", "Variation du besoin brut en surface (ha équiv. SBP) par rapport à la référence"),
     "bloc_4": ("Répartir le besoin brut", "Emprise de bâtiments à future selon le nombre de niveaux de bâtiments)"),
+    "bloc_4_resultat": ("Résultat", "emprise de bâtiments, SBP et sol total selon le nombre de niveaux"),
     # sous-titres du bloc 4
     "bloc_4_niveaux": "Niveaux supplémentaires des bâtiments",
-    "bloc_4_batiments": "Hauteur des bâtiments",
     "bloc_4_carres": "Résultat : Emprise de bâtiments (m²)",
     "bloc_4_tableau": "Résultat : SBP, SBP de surfaces annexes, emprise et sol total",
 }
@@ -93,8 +93,13 @@ CSS = """
   [data-testid="stVerticalBlock"]:has(.z1):not(:has([data-testid="stVerticalBlock"] .z1)),
   [data-testid="stVerticalBlock"]:has(.z2):not(:has([data-testid="stVerticalBlock"] .z2)),
   [data-testid="stVerticalBlock"]:has(.z3):not(:has([data-testid="stVerticalBlock"] .z3)),
-  [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)) {
+  [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)),
+  [data-testid="stVerticalBlock"]:has(.z5):not(:has([data-testid="stVerticalBlock"] .z5)) {
     border-radius: 12px; padding: 1.2rem 1.8rem 1.5rem 1.8rem; margin-bottom: 2.8rem; }
+  /* espace sous le contenu des blocs 1, 2 et « Résultat » du bloc 2 */
+  [data-testid="stVerticalBlock"]:has(.z1):not(:has([data-testid="stVerticalBlock"] .z1)),
+  [data-testid="stVerticalBlock"]:has(.z2):not(:has([data-testid="stVerticalBlock"] .z2)),
+  [data-testid="stVerticalBlock"]:has(.z3):not(:has([data-testid="stVerticalBlock"] .z3)) { padding-bottom: 3rem; }
   [data-testid="stVerticalBlock"]:has(.z1):not(:has([data-testid="stVerticalBlock"] .z1)) {
     background: rgba(42,156,142,.12); border: 1px solid rgba(42,156,142,.40); }
   [data-testid="stVerticalBlock"]:has(.z2):not(:has([data-testid="stVerticalBlock"] .z2)) {
@@ -103,20 +108,18 @@ CSS = """
     background: rgba(98,70,211,.32); border: 1px solid rgba(98,70,211,.32); }
   [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)) {
     background: rgba(255,148,51,.13); border: 1px solid rgba(255,148,51,.50); }
+  [data-testid="stVerticalBlock"]:has(.z5):not(:has([data-testid="stVerticalBlock"] .z5)) {
+    background: rgba(255,148,51,.32); border: 1px solid rgba(255,148,51,.80); }
   [data-baseweb="slider"] { filter: grayscale(1); }  /* barre du curseur en gris, quel que soit le thème */
-  /* graduations sous la barre : un trait par pas de 1 % (150 pas de -50 % à +100 %), un trait long tous les 10 % */
-  [data-baseweb="slider"]::before, [data-baseweb="slider"]::after { content: ""; position: absolute; left: 0; right: 0;
-    pointer-events: none; background-repeat: repeat-x, no-repeat; background-position: 0 0, 100% 0; }
-  [data-baseweb="slider"]::before { top: 26px; height: 4px;
-    background-image: linear-gradient(to right, #8A8F9E 1px, transparent 1px), linear-gradient(#8A8F9E, #8A8F9E);
-    background-size: calc((100% - 1px) / 150) 100%, 1px 100%; }
-  [data-baseweb="slider"]::after { top: 26px; height: 8px;
+  /* graduations sous la barre : un trait tous les 10 % (15 intervalles de -50 % à +100 %) */
+  [data-baseweb="slider"]::after { content: ""; position: absolute; left: 0; right: 0; pointer-events: none;
+    background-repeat: repeat-x, no-repeat; background-position: 0 0, 100% 0; top: 26px; height: 8px;
     background-image: linear-gradient(to right, #444 1px, transparent 1px), linear-gradient(#444, #444);
     background-size: calc((100% - 1px) / 15) 100%, 1px 100%; }
   .soustitre { font-family: @TITRES; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em;
                color: #5C628F; font-weight: 700; margin: .1rem 0 .4rem 0; }
-  .carte.grand { padding: 1.1rem 1.4rem; }
-  .carte.grand .c-val { font-size: 2.3rem; }
+  .carte.grand { padding: 1.1rem 2rem 1.1rem 1.6rem; }
+  .carte.grand .c-val { font-size: clamp(1.45rem, 2.1vw, 2.3rem); }
   .op.grand { padding-top: 2.3rem; }
   .hero { background: linear-gradient(120deg, @MARINE 0%, #2B2A8F 55%, @VIOLET 100%);
           color: white; padding: 1.5rem 1.9rem; border-radius: 12px; margin-bottom: 1.1rem;
@@ -147,7 +150,7 @@ CSS = """
   .c-label { font-family: @TITRES; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: #5C628F; font-weight: 700; }
   .c-val { font-family: @TITRES; font-size: 2.05rem; font-weight: 700; line-height: 1.2; color: @MARINE; }
   .carte.var .c-val { color: @VIOLET; }
-  .c-val small { font-size: .95rem; font-weight: 600; color: #5C628F; margin-left: .25rem; }
+  .c-val small { font-size: .95rem; font-weight: 600; color: #5C628F; }
   .c-sub { font-size: .82rem; color: #5C628F; margin-top: .1rem; }
   .op { font-size: 2rem; color: #9AA0C4; text-align: center; padding-top: 1.7rem; font-weight: 300; }
 
@@ -188,7 +191,7 @@ def pct(x: float, dec: int = 1) -> str:
 
 
 def carte(label: str, valeur: str, unite: str = "", sous: str = "", style: str = "ref") -> str:
-    u = f"<small>{unite}</small>" if unite else ""
+    u = f" <small>{unite}</small>" if unite else ""   # espace avant l'unité : retour à la ligne possible
     return (f"<div class='carte {style}'><div class='c-label'>{label}</div>"
             f"<div class='c-val'>{valeur}{u}</div><div class='c-sub'>{sous}</div></div>")
 
@@ -421,8 +424,8 @@ with onglet_equipement:
     with st.container():
         st.markdown("<span class='zone z1'></span>", unsafe_allow_html=True)
         etape(1, *bloc("bloc_1"), TEAL)
-        a, op1, b, op2, c = st.columns([1, 0.12, 1, 0.12, 1])
-        a.markdown(carte("Ratio actuel", fr(ra, 2), "m²/hab.",
+        a, op1, b, op2, c = st.columns([1, 0.08, 1, 0.08, 1])
+        a.markdown(carte("Ratio de référence", fr(ra, 2), "m²/hab.",
                          f"{fr(base['population_actuelle'], 0)} hab. · {niv_actuels} niveaux", "ref grand"),
                    unsafe_allow_html=True)
         op1.markdown("<div class='op grand'>×</div>", unsafe_allow_html=True)
@@ -430,27 +433,27 @@ with onglet_equipement:
                          "scénario de référence, inchangé", "ref grand"), unsafe_allow_html=True)
         op2.markdown("<div class='op grand'>=</div>", unsafe_allow_html=True)
         c.markdown(carte("Besoin brut, référence", fr(base["besoin_brut_ref_ha"]), "ha",
-                         "équiv. SBP, au ratio actuel", "ref grand"), unsafe_allow_html=True)
+                         "équiv. SBP, au ratio de référence", "ref grand"), unsafe_allow_html=True)
 
     # ---------------------------------------------------- bloc 2 : ajuster le ratio
     with st.container():
         st.markdown("<span class='zone z2'></span>", unsafe_allow_html=True)
         etape(2, *bloc("bloc_2"), VIOLET)
-        s_gauche, s_droite = st.columns(2)
+        s_gauche, _espace, s_droite, _vide = st.columns([0.7, 0.35, 0.7, 1.25])  # curseur et saisie courts, séparés par un espace
         with s_gauche:
             if ra > 0:
-                st.slider("Variation du ratio actuel", -50, 100, key=k_rs, step=1,
+                st.slider("Variation du ratio de référence", -50, 100, key=k_rs, step=1,
                           on_change=ratio_depuis_curseur, args=(equipement,), format="%+d %%")
             else:
-                st.info("Cet équipement n'a pas de SBP dans les données (ratio actuel nul) : "
+                st.info("Cet équipement n'a pas de SBP dans les données (ratio de référence nul) : "
                         "saisissez directement un ratio à tester.")
         with s_droite:
             st.number_input("Ratio futur (m² équiv. SBP / hab.)", min_value=0.0, step=0.5, format="%.2f",
                             key=k_rn, on_change=ratio_depuis_nombre, args=(equipement,))
         st.markdown("<div style='height:.4rem'></div>", unsafe_allow_html=True)
-        a2, op3, b2, op4, c2 = st.columns([1, 0.12, 1, 0.12, 1])
+        a2, op3, b2, op4, c2 = st.columns([1, 0.08, 1, 0.08, 1])
         a2.markdown(carte("Ratio variante", fr(ligne["ratio_variante"], 2), "m²/hab.",
-                          f"ratio actuel : {fr(ra, 2)}", "var grand"), unsafe_allow_html=True)
+                          f"ratio de référence : {fr(ra, 2)}", "var grand"), unsafe_allow_html=True)
         op3.markdown("<div class='op grand'>×</div>", unsafe_allow_html=True)
         b2.markdown(carte("Population future", fr(base["population_future"], 0), "hab.",
                           "scénario de référence, inchangé", "var grand"), unsafe_allow_html=True)
@@ -476,22 +479,28 @@ with onglet_equipement:
     with st.container():
         st.markdown("<span class='zone z4'></span>", unsafe_allow_html=True)
         etape(3, *bloc("bloc_4"), ORANGE)
-        n1, n2, n3 = st.columns([1, 1, 1])
+        n1, n2 = st.columns([1, 2.32])  # colonne de gauche = largeur d'une carte du bloc 2
         with n1:
             st.markdown(f"<div class='soustitre'>{TEXTES['bloc_4_niveaux']}</div>", unsafe_allow_html=True)
             if niv_actuels > 0:
-                st.number_input("Niveaux supplémentaires", min_value=1 - niv_actuels, max_value=100, step=1,
-                                key=k_niv, label_visibility="collapsed", format="%d",
-                                on_change=niveaux_supplementaires_saisis, args=(equipement,))
+                c_saisie, _reste = st.columns([0.75, 0.25])  # même largeur que la saisie du ratio (bloc 2)
+                c_saisie.number_input("Niveaux supplémentaires", min_value=1 - niv_actuels, max_value=100, step=1,
+                                      key=k_niv, label_visibility="collapsed", format="%d",
+                                      on_change=niveaux_supplementaires_saisis, args=(equipement,))
             else:
                 st.info("Pas de niveau dans les données : l'emprise bâtie n'est pas calculable.")
             st.markdown(carte("Niveaux retenus", fr(ligne["niveaux_variante"], 0), "niveaux",
-                              f"aujourd'hui : {niv_actuels}", "rep"), unsafe_allow_html=True)
+                              f"aujourd'hui : {niv_actuels}", "rep grand"), unsafe_allow_html=True)
         with n2:
-            st.markdown(f"<div class='soustitre'>{TEXTES['bloc_4_batiments']}</div>", unsafe_allow_html=True)
             st.plotly_chart(figure_batiment(ligne["niveaux_actuels"], ligne["niveaux_variante"], niv_max),
                             use_container_width=True, config={"displayModeBar": False})
-        with n3:
+
+    # ---------------------------------------------------- bloc 3 (suite) : résultat de la répartition
+    with st.container():
+        st.markdown("<span class='zone z5'></span>", unsafe_allow_html=True)
+        etape(None, *bloc("bloc_4_resultat"), JAUNE)  # fait partie du bloc 3 : pas de numéro
+        r1, r2 = st.columns([1, 1.4])
+        with r1:
             st.markdown(f"<div class='soustitre'>{TEXTES['bloc_4_carres']}</div>", unsafe_allow_html=True)
             st.plotly_chart(
                 figure_emprises([
@@ -501,34 +510,33 @@ with onglet_equipement:
                 ]),
                 use_container_width=True, config={"displayModeBar": False},
             )
+        with r2:
+            st.markdown(f"<div class='soustitre'>{TEXTES['bloc_4_tableau']}</div>", unsafe_allow_html=True)
 
-        st.markdown(f"<div class='soustitre' style='margin-top:.8rem'>{TEXTES['bloc_4_tableau']}</div>",
-                    unsafe_allow_html=True)
+            def ligne_tab(nom, suffixe, style=""):
+                return (f"<tr class='{style}'><td>{nom}</td><td>{fr(ligne['sbp_bati_' + suffixe + '_m2'], 0)}</td>"
+                        f"<td>{fr(ligne['annexes_' + suffixe + '_m2'], 0)}</td>"
+                        f"<td>{fr(ligne['emprise_' + suffixe + '_m2'], 0)}</td>"
+                        f"<td>{fr(ligne['sol_' + suffixe + '_m2'], 0)}</td></tr>")
 
-        def ligne_tab(nom, suffixe, style=""):
-            return (f"<tr class='{style}'><td>{nom}</td><td>{fr(ligne['sbp_bati_' + suffixe + '_m2'], 0)}</td>"
-                    f"<td>{fr(ligne['annexes_' + suffixe + '_m2'], 0)}</td>"
-                    f"<td>{fr(ligne['emprise_' + suffixe + '_m2'], 0)}</td>"
-                    f"<td>{fr(ligne['sol_' + suffixe + '_m2'], 0)}</td></tr>")
-
-        t1, t2 = st.columns([1.6, 1])
-        t1.markdown(
-            "<table class='sbp'><tr><th>m²</th><th>SBP bâtiments</th><th>Annexes</th><th>Emprise bâtie</th>"
-            "<th>Sol total</th></tr>"
-            + ligne_tab("Aujourd'hui", "auj") + ligne_tab("Référence future", "ref") + ligne_tab("Variante", "var", "var")
-            + "</table>",
-            unsafe_allow_html=True,
-        )
-        t2.markdown(
-            pastille("Emprise bâtie vs aujourd'hui", ligne["ecart_emprise_auj_pct"])
-            + pastille("Emprise bâtie vs réf. future", ligne["ecart_emprise_ref_pct"])
-            + "<br>"
-            + pastille("Sol total vs aujourd'hui", ligne["ecart_sol_auj_pct"])
-            + pastille("Sol total vs réf. future", ligne["ecart_sol_ref_pct"]),
-            unsafe_allow_html=True,
-        )
-        if ligne["alertes"]:
-            st.warning(ligne["alertes"])
+            st.markdown(
+                "<table class='sbp'><tr><th>m²</th><th>SBP bâtiments</th><th>Annexes</th><th>Emprise bâtie</th>"
+                "<th>Sol total</th></tr>"
+                + ligne_tab("Aujourd'hui", "auj") + ligne_tab("Référence future", "ref")
+                + ligne_tab("Variante", "var", "var")
+                + "</table>",
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                pastille("Emprise bâtie vs aujourd'hui", ligne["ecart_emprise_auj_pct"])
+                + pastille("Emprise bâtie vs réf. future", ligne["ecart_emprise_ref_pct"])
+                + "<br>"
+                + pastille("Sol total vs aujourd'hui", ligne["ecart_sol_auj_pct"])
+                + pastille("Sol total vs réf. future", ligne["ecart_sol_ref_pct"]),
+                unsafe_allow_html=True,
+            )
+            if ligne["alertes"]:
+                st.warning(ligne["alertes"])
 
 # ================================================================ PAGE 2 : vue d'ensemble
 res = calculer(DF, reglages_df())
@@ -543,7 +551,7 @@ with onglet_ensemble:
     st.markdown("<div style='height:.6rem'></div>", unsafe_allow_html=True)
     k1, k2, k3 = st.columns(3)
     k1.markdown(carte("Besoin brut total, référence", fr(tot["besoin_brut_ref_ha"]), "ha",
-                      "ratios actuels × populations futures", "ref"), unsafe_allow_html=True)
+                      "ratios de référence × populations futures", "ref"), unsafe_allow_html=True)
     k2.markdown(carte("Besoin brut total, variante", fr(tot["besoin_brut_var_ha"]), "ha",
                       f"{fr(tot['ecart_besoin_ha'], 1, True)} ha vs référence", "var"), unsafe_allow_html=True)
     k3.markdown(carte("Équipements réglés", str(n_regles), f"/ {len(DF)}",
@@ -572,7 +580,7 @@ with onglet_ensemble:
         column_config={
             "classe": "Classe",
             "type": st.column_config.TextColumn("Équipement", width="large"),
-            "ratio_actuel": st.column_config.NumberColumn("Ratio actuel", format="%.2f"),
+            "ratio_actuel": st.column_config.NumberColumn("Ratio de référence", format="%.2f"),
             "ratio_variante": st.column_config.NumberColumn("Ratio variante", format="%.2f"),
             "besoin_brut_ref_ha": st.column_config.NumberColumn("Besoin brut réf. (ha)", format="%.1f"),
             "besoin_brut_var_ha": st.column_config.NumberColumn("Besoin brut variante (ha)", format="%.1f"),
@@ -612,7 +620,7 @@ with onglet_methode:
     st.markdown("<div style='height:.6rem'></div>", unsafe_allow_html=True)
     st.subheader("Méthode : le chemin inverse de la référence")
     s1, s2, s3, s4 = st.columns(4)
-    s1.markdown(carte("1 · Ratio futur", "choisi", "", "m² équiv. SBP / hab. ; par défaut le ratio actuel", "ref"),
+    s1.markdown(carte("1 · Ratio futur", "choisi", "", "m² équiv. SBP / hab. ; par défaut le ratio de référence", "ref"),
                 unsafe_allow_html=True)
     s2.markdown(carte("2 · Besoin brut", "ratio × pop.", "", "population future inchangée ; pas de besoin net", "var"),
                 unsafe_allow_html=True)
@@ -622,8 +630,8 @@ with onglet_methode:
                 unsafe_allow_html=True)
     st.markdown(
         """
-- **Ratio actuel** = (emprise × niveaux + annexes) ÷ population actuelle.
-- **Référence future** = ratio actuel × population future, avec les mêmes niveaux qu'aujourd'hui.
+- **Ratio de référence** = (emprise × niveaux + annexes) ÷ population actuelle.
+- **Référence future** = ratio de référence × population future, avec les mêmes niveaux qu'aujourd'hui.
 - **Écarts** : comparés à aujourd'hui et à la référence future, sans hypothèse sur l'existant
   (construction neuve ou surélévation).
 - **Niveaux** : saisis en niveaux supplémentaires (minimum 1 niveau au total). Au-delà du niveau maximum de référence, un avertissement s'affiche mais le calcul reste possible.
