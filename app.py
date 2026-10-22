@@ -52,7 +52,7 @@ TEXTES = {
     "bloc_1": ("Situation de référence"),
     "bloc_2": ("Ajuster le ratio d'équipements", "le besoin brut est recalculé sur la même population future"),
     "bloc_3": ("Résultat", "Variation du besoin brut en surface (ha équiv. SBP) par rapport à la référence"),
-    "bloc_4": ("Répartir le besoin brut", "Emprise de bâtiments à future selon le nombre de niveaux de bâtiments)"),
+    "bloc_4": ("Répartir le besoin brut", "Emprise de bâtiments à futur selon le nombre de niveaux de bâtiments"),
     # sous-titres du bloc 4
     "bloc_4_niveaux": "Niveaux supplémentaires des bâtiments",
     "bloc_4_batiments": "Hauteur des bâtiments",
