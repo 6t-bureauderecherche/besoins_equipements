@@ -52,7 +52,7 @@ TEXTES = {
     "bloc_1": ("Situation de référence"),
     "bloc_2": ("Ajuster le ratio d'équipements", "le besoin brut est recalculé sur la même population future"),
     "bloc_3": ("Résultat", "Variation du besoin brut en surface (ha équiv. SBP) par rapport à la référence"),
-    "bloc_4": ("Répartir le besoin brut", "Emprise de bâtiments à futur selon le nombre de niveaux de bâtiments"),
+    "bloc_4": ("Répartir le besoin brut", "Emprise de bâtiments à future selon le nombre de niveaux de bâtiments)"),
     # sous-titres du bloc 4
     "bloc_4_niveaux": "Niveaux supplémentaires des bâtiments",
     "bloc_4_batiments": "Hauteur des bâtiments",
@@ -103,6 +103,16 @@ CSS = """
     background: rgba(98,70,211,.32); border: 1px solid rgba(98,70,211,.32); }
   [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)) {
     background: rgba(255,148,51,.13); border: 1px solid rgba(255,148,51,.50); }
+  [data-baseweb="slider"] { filter: grayscale(1); }  /* barre du curseur en gris, quel que soit le thème */
+  /* graduations sous la barre : un trait par pas de 1 % (150 pas de -50 % à +100 %), un trait long tous les 10 % */
+  [data-baseweb="slider"]::before, [data-baseweb="slider"]::after { content: ""; position: absolute; left: 0; right: 0;
+    pointer-events: none; background-repeat: repeat-x, no-repeat; background-position: 0 0, 100% 0; }
+  [data-baseweb="slider"]::before { top: 26px; height: 4px;
+    background-image: linear-gradient(to right, #8A8F9E 1px, transparent 1px), linear-gradient(#8A8F9E, #8A8F9E);
+    background-size: calc((100% - 1px) / 150) 100%, 1px 100%; }
+  [data-baseweb="slider"]::after { top: 26px; height: 8px;
+    background-image: linear-gradient(to right, #444 1px, transparent 1px), linear-gradient(#444, #444);
+    background-size: calc((100% - 1px) / 15) 100%, 1px 100%; }
   .soustitre { font-family: @TITRES; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em;
                color: #5C628F; font-weight: 700; margin: .1rem 0 .4rem 0; }
   .carte.grand { padding: 1.1rem 1.4rem; }
