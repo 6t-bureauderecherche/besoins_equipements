@@ -90,23 +90,19 @@ CSS = """
 
   .stApp { background: #F8F8FF; }
   .zone { display: none; }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z1),
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z2),
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z3),
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z4) {
-    border-radius: 12px; padding: 1.2rem 1.8rem 1.5rem 1.8rem; margin-bottom: 1.6rem; }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z1) {
+  [data-testid="stVerticalBlock"]:has(.z1):not(:has([data-testid="stVerticalBlock"] .z1)),
+  [data-testid="stVerticalBlock"]:has(.z2):not(:has([data-testid="stVerticalBlock"] .z2)),
+  [data-testid="stVerticalBlock"]:has(.z3):not(:has([data-testid="stVerticalBlock"] .z3)),
+  [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)) {
+    border-radius: 12px; padding: 1.2rem 1.8rem 1.5rem 1.8rem; margin-bottom: 2.8rem; }
+  [data-testid="stVerticalBlock"]:has(.z1):not(:has([data-testid="stVerticalBlock"] .z1)) {
     background: rgba(42,156,142,.12); border: 1px solid rgba(42,156,142,.40); }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z2) {
+  [data-testid="stVerticalBlock"]:has(.z2):not(:has([data-testid="stVerticalBlock"] .z2)) {
     background: #EFECFB; border: 1px solid rgba(98,70,211,.32); }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z3) {
+  [data-testid="stVerticalBlock"]:has(.z3):not(:has([data-testid="stVerticalBlock"] .z3)) {
     background: rgba(98,70,211,.32); border: 1px solid rgba(98,70,211,.32); }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z4) {
+  [data-testid="stVerticalBlock"]:has(.z4):not(:has([data-testid="stVerticalBlock"] .z4)) {
     background: rgba(255,148,51,.13); border: 1px solid rgba(255,148,51,.50); }
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z4)
-    [data-testid="stTickBarMin"],
-  div[data-testid="stVerticalBlock"]:has(> div[data-testid="element-container"] > div.stMarkdown .z4)
-    [data-testid="stTickBarMax"] { display: none; }
   .soustitre { font-family: @TITRES; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em;
                color: #5C628F; font-weight: 700; margin: .1rem 0 .4rem 0; }
   .carte.grand { padding: 1.1rem 1.4rem; }
